@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Telemetry Dashboard</title>
+    <link rel="stylesheet" href="./dashboard.css">
+    <!-- ROSLIB for ROS/ROS2 via rosbridge -->
+    <script src="https://unpkg.com/roslib/build/roslib.min.js"></script>
+</head>
+<body>
+
+    <h1>Real-Time Vehicle Diagnostics</h1>
+    
+    <div id="camera-controls">
+        <button id="camera-toggle-btn">Show Camera Feed</button>
+        <div id="camera-toggle-status">Camera is OFF</div>
+    </div>
+
+    <div id="container">
+        <!-- LEFT COLUMN: OBD METRICS -->
+        <div id="left-col">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Live Vehicle Data</h2>
+                    <div id="status" class="status-badge">Status: Connecting…</div>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <div class="label">Speed (km/h)</div>
+                        <div class="value" id="speed">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">RPM</div>
+                        <div class="value" id="rpm">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Throttle (%)</div>
+                        <div class="value" id="throttlePosition">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Coolant (°C)</div>
+                        <div class="value" id="coolantTemp">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Fuel (%)</div>
+                        <div class="value" id="fuelLevel">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Intake Temp (°C)</div>
+                        <div class="value" id="intakeAirTemp">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Timing Advance (°)</div>
+                        <div class="value" id="timingAdvance">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">MAF (g/s)</div>
+                        <div class="value" id="maf">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Short Fuel Trim (%)</div>
+                        <div class="value" id="shortFuelTrim">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Long Fuel Trim (%)</div>
+                        <div class="value" id="longFuelTrim">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Engine Load (%)</div>
+                        <div class="value" id="engineLoad">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Barometric (kPa)</div>
+                        <div class="value" id="barometricPressure">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Ambient (°C)</div>
+                        <div class="value" id="ambientAirTemp">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Tire Pressure (kPa)</div>
+                        <div class="value" id="tirePressure">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Voltage (V)</div>
+                        <div class="value" id="batteryVoltage">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Accel (m/s²)</div>
+                        <div class="value" id="acceleration">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Trip (km)</div>
+                        <div class="value" id="tripDistance">--</div>
+                    </div>
+                    <div class="metric wide">
+                        <div class="label">DTC</div>
+                        <div class="value" id="dtc">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Ignition</div>
+                        <div class="value ignition Off" id="ignitionState">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">Idling</div>
+                        <div class="value" id="idlingTime">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: CAMERA + LIDAR -->
+        <div id="right-col">
+            <div class="card media-card">
+                <div class="media-label">CAMERA VIEW</div>
+                <div id="camera-container">
+                    <div id="camera-placeholder">Waiting for frames…</div>
+                    <img id="cameraFeed" alt="Camera feed" />
+                </div>
+            </div>
+
+            <div class="card media-card">
+                <div class="media-label">LIDAR VIEW <span id="lidar-status">(connecting…)</span></div>
+                <canvas id="lidar-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="./dashboard.js"></script>
+</body>
+</html>
