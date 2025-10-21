@@ -1,247 +1,235 @@
 /* ==========================================================================
-   1. ROOT VARIABLES & GLOBAL STYLES
+   Vehicle Dashboard — Clean, Responsive CSS
+   Matches index.html structure: left/right columns, cards, metrics grid,
+   camera + LiDAR media panes. Dark theme.
    ========================================================================== */
 
-:root {
-    /* Color Palette */
-    --bg-color: #121212;
-    --card-bg: #1e1e1e;
-    --border-color: #333333;
-    --border-color-hover: #555555;
-    --primary-text: #e0e0e0;
-    --secondary-text: #888888;
-    --accent-color: #007bff;
-    --accent-glow: rgba(0, 123, 255, 0.3);
-
-    /* Status Colors */
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-    --error-color: #dc3545;
-
-    /* Typography */
-    --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-    /* UI Metrics */
-    --border-radius: 8px;
-    --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    --card-shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.3);
-    --transition-speed: 0.3s;
+/* 1) Root variables & reset ------------------------------------------------ */
+:root{
+  --bg:#0f1115;
+  --fg:#e7e7e9;
+  --muted:#9aa1ab;
+  --card:#171a21;
+  --card-2:#151922;
+  --border:#242a33;
+  --border-strong:#2e3642;
+  --accent:#4da3ff;
+  --accent-glow: rgba(77,163,255,.18);
+  --ok:#2ecc71;
+  --warn:#f1c40f;
+  --err:#e74c3c;
+  --radius:14px;
+  --shadow: 0 12px 30px rgba(0,0,0,.35);
+  --shadow-sm: 0 6px 16px rgba(0,0,0,.28);
+  --transition:.25s ease;
 }
 
-*, *::before, *::after {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#0f1115 0%, #0e1218 100%);
+  color:var(--fg);
+  font: 500 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:20px;
 }
 
-body {
-    font-family: var(--font-family-sans);
-    background-color: var(--bg-color);
-    color: var(--primary-text);
-    margin: 0;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+/* 2) Header & controls ----------------------------------------------------- */
+h1{
+  margin:0 0 18px 0;
+  font-weight:800;
+  letter-spacing:.2px;
+  font-size: clamp(22px, 3vw, 32px);
+  text-align:center;
+  background: linear-gradient(90deg,#b6c4ff 0%, #ffffff 20%, #c7f0ff 60%, #b6c4ff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
-
-/* ==========================================================================
-   2. TYPOGRAPHY & HEADER
-   ========================================================================== */
-
-h1 {
-    margin: 0 0 1.5rem 0;
-    font-size: 2.5em;
-    font-weight: 600;
-    text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+#camera-controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:center;
+  margin: 0 auto 18px auto;
 }
 
+#camera-toggle-btn{
+  appearance:none;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#1b2029 0%, #151922 100%);
+  color:var(--fg);
+  font-weight:600;
+  letter-spacing:.2px;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+#camera-toggle-btn:hover{ transform: translateY(-1px); border-color:var(--border-strong); box-shadow:0 10px 22px rgba(0,0,0,.32); }
+#camera-toggle-btn:active{ transform: translateY(0); }
 
-/* ==========================================================================
-   3. LAYOUT CONTAINERS
-   ========================================================================== */
-
-#media-container {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    justify-content: center;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 1200px;
-    margin-bottom: 1.5rem;
+#camera-toggle-status{
+  color:var(--muted);
+  font-weight:600;
 }
 
-#dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 1200px;
+/* 3) Main layout ----------------------------------------------------------- */
+#container{
+  display:grid;
+  grid-template-columns: minmax(320px, 2fr) minmax(320px, 1.35fr);
+  gap:18px;
+  max-width: 1400px;
+  margin:0 auto;
 }
 
+#left-col, #right-col{ display:flex; flex-direction:column; gap:18px; }
 
-/* ==========================================================================
-   4. MEDIA WINDOWS (CAMERA & LIDAR)
-   ========================================================================== */
-
-#camera-container,
-#lidar-container {
-    background-color: #000;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    position: relative;
-    flex: 1 1 480px; /* Flex properties for responsive sizing */
-    min-width: 320px;
-    aspect-ratio: 16 / 9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-speed) ease;
+/* 4) Cards ----------------------------------------------------------------- */
+.card{
+  background: radial-gradient(140% 140% at -10% -20%, #1a202a 0%, #141923 45%, #11151d 100%);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
 }
 
-#camera-container:hover,
-#lidar-container:hover {
-    border-color: var(--border-color-hover);
-    box-shadow: 0 0 15px var(--accent-glow);
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+}
+.card-header h2{
+  margin:0;
+  font-size:clamp(16px,2vw,20px);
+  font-weight:700;
+  letter-spacing:.2px;
 }
 
-.media-label {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8em;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    z-index: 10;
+.status-badge{
+  padding:6px 10px;
+  font-size:13px;
+  border-radius:999px;
+  background:#0f131a;
+  border:1px solid var(--border);
+  color:var(--muted);
+  font-weight:700;
+  letter-spacing:.2px;
+}
+.status-badge.ok{ background: rgba(46, 204, 113, .15); border-color:#2ecc71; color:#a6f0c3; }
+.status-badge.warn{ background: rgba(241, 196, 15, .18); border-color:#f1c40f; color:#f8e49a; }
+.status-badge.error{ background: rgba(231, 76, 60, .18); border-color:#e74c3c; color:#ffc2bb; }
+
+/* 5) Metrics grid ---------------------------------------------------------- */
+.metrics-grid{
+  display:grid;
+  gap:14px;
+  padding:16px;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+}
+.metric{
+  background: linear-gradient(180deg, #181e28 0%, #141923 100%);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+.metric:hover{ transform: translateY(-3px); border-color:var(--border-strong); box-shadow:0 14px 24px rgba(0,0,0,.32); }
+
+.metric .label{
+  font-size:12px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  margin-bottom:8px;
+}
+.metric .value{
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight:800;
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  line-height:1;
+}
+.metric .value .unit{
+  font-size:.52em;
+  font-weight:600;
+  color:#9fb3c8;
+  opacity:.9;
+  padding-bottom:.18em;
 }
 
-#cameraFeed {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the video covers the container */
-    display: block;
+.metric.wide{ grid-column: span 3; }
+
+/* Ignition & DTC states */
+#ignitionState.Off{ color:var(--err); }
+#ignitionState.On{ color:var(--warn); }
+#ignitionState.Running{ color:var(--ok); }
+#dtc.has-dtc{ color:var(--err); }
+#dtc.no-dtc{ color:var(--ok); }
+
+/* 6) Media cards (Camera + LiDAR) ----------------------------------------- */
+.media-card{ position:relative; padding:0; }
+.media-label{
+  position:absolute; top:10px; left:10px; z-index:2;
+  font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:.18em;
+  background: rgba(10,14,20,.62); color:#e8f0ff;
+  padding:6px 10px; border:1px solid rgba(255,255,255,.08); border-radius:8px;
+  backdrop-filter: blur(6px);
 }
 
-#camera-placeholder {
-    color: var(--secondary-text);
-    transition: opacity var(--transition-speed) ease;
+/* Camera container */
+#camera-container{
+  position:relative; width:100%; aspect-ratio:16/9;
+  display:flex; align-items:center; justify-content:center;
+  background:#000; border-top-left-radius:var(--radius); border-top-right-radius:var(--radius);
+  overflow:hidden; border-bottom-left-radius:var(--radius); border-bottom-right-radius:var(--radius);
+  outline:1px solid var(--border);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+#camera-placeholder{
+  color:#94a3b8; letter-spacing:.2px; font-weight:700;
+  opacity:.8;
+}
+#cameraFeed{
+  width:100%; height:100%; object-fit:cover; display:none;
 }
 
-#lidar-canvas {
-    width: 100%;
-    height: 100%;
+/* LiDAR canvas */
+#lidar-canvas{
+  width:100%; height:auto; aspect-ratio:16/9; display:block; background:#07090d;
+  border-radius:var(--radius);
+  outline:1px solid var(--border);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
 }
 
-
-/* ==========================================================================
-   5. DASHBOARD METRIC CARDS
-   ========================================================================== */
-
-.metric {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    text-align: center;
-    box-shadow: var(--card-shadow);
-    transition: transform var(--transition-speed) ease, 
-                box-shadow var(--transition-speed) ease,
-                border-color var(--transition-speed) ease;
+/* 7) Responsive adjustments ------------------------------------------------ */
+@media (max-width: 1200px){
+  #container{ grid-template-columns: 1fr; }
+}
+@media (max-width: 700px){
+  .metrics-grid{ grid-template-columns: repeat(2, minmax(120px,1fr)); }
+  .metric.wide{ grid-column: span 2; }
+}
+@media (max-width: 420px){
+  body{ padding:14px; }
+  .metrics-grid{ grid-template-columns: 1fr; }
+  .metric.wide{ grid-column: span 1; }
 }
 
-.metric:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--card-shadow-hover);
-    border-color: var(--border-color-hover);
-}
+/* 8) Focus & accessibility tweaks ----------------------------------------- */
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+#camera-toggle-btn:focus-visible{ box-shadow: 0 0 0 4px var(--accent-glow); border-color: var(--accent); }
 
-.metric-label {
-    font-size: 0.9em;
-    color: var(--secondary-text);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.metric-value {
-    font-size: 2.8em;
-    font-weight: 700;
-    line-height: 1;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 0.25rem;
-}
-
-.unit {
-    font-size: 0.5em; /* Relative to metric-value */
-    font-weight: 400;
-    color: var(--secondary-text);
-    padding-bottom: 0.2em;
-}
-
-.text-status,
-.small-text {
-    font-size: 1.4em; /* Slightly smaller for better fit */
-    font-weight: 500;
-    align-self: center; /* Center vertically */
-}
-
-
-/* ==========================================================================
-   6. STATUS BAR & MODIFIERS
-   ========================================================================== */
-
-#status {
-    width: 100%;
-    max-width: 1200px;
-    text-align: center;
-    padding: 12px;
-    margin-bottom: 1.5rem;
-    border-radius: var(--border-radius);
-    font-weight: 500;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-}
-
-/* Status Text Colors */
-.ignitionState.Off { color: var(--error-color); }
-.ignitionState.On { color: var(--warning-color); }
-.ignitionState.Running { color: var(--success-color); }
-
-.dtc.has-dtc { color: var(--error-color); }
-.dtc.no-dtc { color: var(--success-color); }
-
-/* Status Bar Background Colors */
-.status.error { background-color: var(--error-color); color: white; }
-.status.success { background-color: var(--success-color); color: white; }
-.status.warning { background-color: var(--warning-color); color: #111; }
-.status.info { background-color: var(--card-bg); color: var(--primary-text); }
-
-
-/* ==========================================================================
-   7. RESPONSIVE DESIGN
-   ========================================================================== */
-
-@media (max-width: 600px) {
-    body {
-        padding: 1rem;
-    }
-
-    h1 {
-        font-size: 1.8em;
-    }
-
-    #dashboard {
-        grid-template-columns: 1fr; /* Stack metrics on very small screens */
-    }
-
-    .metric-value {
-        font-size: 2.5em;
-    }
-}
+/* 9) Subtle accent ring on hoverable blocks -------------------------------- */
+.card:hover{ box-shadow: 0 16px 38px rgba(0,0,0,.45), 0 0 0 1px var(--accent-glow) inset; }
+.metric:hover{ box-shadow: 0 14px 24px rgba(0,0,0,.36), 0 0 0 1px var(--accent-glow) inset; }
