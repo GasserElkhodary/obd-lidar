@@ -1,0 +1,247 @@
+/* ==========================================================================
+   1. ROOT VARIABLES & GLOBAL STYLES
+   ========================================================================== */
+
+:root {
+    /* Color Palette */
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --border-color: #333333;
+    --border-color-hover: #555555;
+    --primary-text: #e0e0e0;
+    --secondary-text: #888888;
+    --accent-color: #007bff;
+    --accent-glow: rgba(0, 123, 255, 0.3);
+
+    /* Status Colors */
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --error-color: #dc3545;
+
+    /* Typography */
+    --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    /* UI Metrics */
+    --border-radius: 8px;
+    --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    --card-shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.3);
+    --transition-speed: 0.3s;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-sans);
+    background-color: var(--bg-color);
+    color: var(--primary-text);
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+
+/* ==========================================================================
+   2. TYPOGRAPHY & HEADER
+   ========================================================================== */
+
+h1 {
+    margin: 0 0 1.5rem 0;
+    font-size: 2.5em;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ==========================================================================
+   3. LAYOUT CONTAINERS
+   ========================================================================== */
+
+#media-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 1.5rem;
+}
+
+#dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+
+/* ==========================================================================
+   4. MEDIA WINDOWS (CAMERA & LIDAR)
+   ========================================================================== */
+
+#camera-container,
+#lidar-container {
+    background-color: #000;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+    flex: 1 1 480px; /* Flex properties for responsive sizing */
+    min-width: 320px;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-speed) ease;
+}
+
+#camera-container:hover,
+#lidar-container:hover {
+    border-color: var(--border-color-hover);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.media-label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 10;
+}
+
+#cameraFeed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the video covers the container */
+    display: block;
+}
+
+#camera-placeholder {
+    color: var(--secondary-text);
+    transition: opacity var(--transition-speed) ease;
+}
+
+#lidar-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================================
+   5. DASHBOARD METRIC CARDS
+   ========================================================================== */
+
+.metric {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: transform var(--transition-speed) ease, 
+                box-shadow var(--transition-speed) ease,
+                border-color var(--transition-speed) ease;
+}
+
+.metric:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--border-color-hover);
+}
+
+.metric-label {
+    font-size: 0.9em;
+    color: var(--secondary-text);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-size: 2.8em;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.unit {
+    font-size: 0.5em; /* Relative to metric-value */
+    font-weight: 400;
+    color: var(--secondary-text);
+    padding-bottom: 0.2em;
+}
+
+.text-status,
+.small-text {
+    font-size: 1.4em; /* Slightly smaller for better fit */
+    font-weight: 500;
+    align-self: center; /* Center vertically */
+}
+
+
+/* ==========================================================================
+   6. STATUS BAR & MODIFIERS
+   ========================================================================== */
+
+#status {
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+    padding: 12px;
+    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+/* Status Text Colors */
+.ignitionState.Off { color: var(--error-color); }
+.ignitionState.On { color: var(--warning-color); }
+.ignitionState.Running { color: var(--success-color); }
+
+.dtc.has-dtc { color: var(--error-color); }
+.dtc.no-dtc { color: var(--success-color); }
+
+/* Status Bar Background Colors */
+.status.error { background-color: var(--error-color); color: white; }
+.status.success { background-color: var(--success-color); color: white; }
+.status.warning { background-color: var(--warning-color); color: #111; }
+.status.info { background-color: var(--card-bg); color: var(--primary-text); }
+
+
+/* ==========================================================================
+   7. RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    #dashboard {
+        grid-template-columns: 1fr; /* Stack metrics on very small screens */
+    }
+
+    .metric-value {
+        font-size: 2.5em;
+    }
+}
